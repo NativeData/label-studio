@@ -9,7 +9,7 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const REPO = 'heartexlabs/label-studio-frontend';
+const REPO = 'NativeData/label-studio-frontend';
 const dir = path.resolve(__dirname, 'lsf_tmp');
 const TOKEN = process.env.GITHUB_TOKEN;
 
