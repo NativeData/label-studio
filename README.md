@@ -84,6 +84,19 @@ pip install -e .
 python label_studio/server.py start labeling_project --init
 ```
 
+## Integrate Front-end Project
+
+The UI for the project is held in its own repository at [NativeData/label-studio-frontend](https://github.com/NativeData/label-studio-frontend). To pull in the latest changes, run `node scripts/get-lsf-build.js`.
+
+**NOTE:** Updating the front-end is a manual process, so this needs to be explicitly trigger (e.g. before a `docker-compose build` whenever the FE should be updated).
+
+### Set-up
+
+* We've added a `package.json` to the scripts folder, as the script itself depends on `node-fetch` package. Run `yarn` to pull in the dependencies the first time around.
+* The script will download the last build package from the Github Actions of the "label-studio-frontend" project (on the `master` branch). If the last build failed and no package (build artefact) was produced, this script will fail.
+* You will need an environment variable of `GITHUB_TOKEN` which will be used to access the package.
+* Once you run `node scripts/get-lsf-build.js`, the latest version of the front-end code will be installed to `label_studio/static/editor and the `version.json` file will be updated to show the commit details from that repo.
+
 ## Run docker
 You can also start serving at `http://localhost:8080` by using docker:
 ```bash
