@@ -804,11 +804,24 @@ def api_completion_update(task_id, completion_id):
     task_id = int(task_id)
     completion = request.json
 
-    completion.pop('state', None)  # remove editor state
-    completion['skipped'] = completion['was_cancelled'] = False  # pop is a bad idea because of dict updating inside
+    original_size = len(completion['result'])
 
+    completion.pop('state', None)  # remove editor state
+    print(f"*************************")
+    print(f"COMPLETION {completion}")
+
+    completion['skipped'] = completion['was_cancelled'] = False  # pop is a bad idea because of dict updating inside
+    completion['result'] = list(filter(lambda result: result['from_name'].split('label')[1] == result['to_name'].split('photo')[1], completion['result']))
     completion['id'] = int(completion_id)
+    new_size = len(completion['result'])
+
     g.project.save_completion(task_id, completion)
+
+    print(f"Original result count: {original_size}")
+    print(f"Filtered result count: {new_size}")
+    print(f"*************************")
+    print(f"*************************")
+
     return make_response('ok', 201)
 
 
