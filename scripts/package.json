@@ -1,0 +1,11 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "Dependencies needed for get-lsf-build script",
+  "main": "get-lsf-build.js",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}

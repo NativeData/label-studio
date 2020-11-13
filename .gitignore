@@ -15,6 +15,9 @@ node_modules/
 backend/env3/
 backend/__pycache__
 
+# Frontend install
+scripts/lsf_tmp
+
 # IDEA
 .idea
 *.iml
