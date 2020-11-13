@@ -6,8 +6,12 @@ from google.cloud import storage
 from .base import CloudStorage, BaseStorageForm, StringField, BooleanField, Optional
 
 
-logger = logging.getLogger(__name__)
+from bugsnag.handlers import BugsnagHandler
 
+logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 class GCSStorage(CloudStorage):
 

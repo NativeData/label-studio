@@ -5,6 +5,7 @@ except:
     import json
 from .exceptions import ValidationError
 from urllib.parse import urlparse
+from bugsnag.handlers import BugsnagHandler
 
 
 class SkipField(Exception):
@@ -25,7 +26,11 @@ _DATA_TYPES = {
     'Dialog': [list],
     'Table': [dict]
 }
+
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 settings = Settings()
 
 

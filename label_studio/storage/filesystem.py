@@ -5,9 +5,12 @@ from copy import deepcopy
 
 from label_studio.utils.io import json_load, delete_dir_content, iter_files
 from .base import BaseStorage, BaseForm, CloudStorage
-
+from bugsnag.handlers import BugsnagHandler
 
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 
 class JSONStorage(BaseStorage):

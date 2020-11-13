@@ -6,7 +6,12 @@ import os
 
 from .base import CloudStorage, BaseStorageForm, BooleanField, Optional, StringField
 
+from bugsnag.handlers import BugsnagHandler
+
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 logging.getLogger('botocore').setLevel(logging.CRITICAL)
 boto3.set_stream_logger(level=logging.INFO)
 S3_REGION = os.environ.get('S3_REGION', '')
@@ -28,7 +33,7 @@ class S3Storage(CloudStorage):
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
         self.aws_session_token = aws_session_token
-        
+
         super(S3Storage, self).__init__(**kwargs)
 
     def _get_client(self):
@@ -88,7 +93,7 @@ class S3CompletionsStorageForm(BaseStorageForm):
 class S3CompletionsStorage(S3Storage):
 
     form = S3CompletionsStorageForm
-    
+
     def __init__(self, use_blob_urls=False, regex='.*', **kwargs):
         """Completion Storages are unfiltered JSON storages"""
         super(S3CompletionsStorage, self).__init__(use_blob_urls=False, regex='.*', **kwargs)

@@ -140,6 +140,20 @@ Or you can just use .env file instead of INIT_COMMAND='...' adding this line:
 INIT_COMMAND=--init --force
 ```
 
+## Bugsnag integration
+
+`server.py` has been modified to integrate with Bugsnag for:
+
+* unhandled errors
+* log statements at `ERROR` level or above
+
+The `BUGSNAG_API_KEY` is read as an environment variable. `BUGSNAG_RELEASE_STAGE` is used to specify which environment type is running. Local development should have this set to `development`.
+### Bugsnag & Docker
+
+* Docker compose expects an `.env` file with an environment variable of `BUGSNAG_API_KEY` to be defined. This will be picked up automatically by a standard `docker-compose up` and set within the running containers.
+* This file is what's _used by_ Docker Compose but not what's _passed to_ the individual instances. The individual environment variables that will get passed in are defined in the `docker-compose.yml` (via `tools/setup.sh`). Anything not explicitly passed in will be ignored.
+
+
 ## One Click Deploy
 
 You can deploy LS right now in one click on any of these clouds: 

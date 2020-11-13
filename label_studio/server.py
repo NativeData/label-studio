@@ -9,6 +9,7 @@ import logging
 import logging.config
 import traceback as tb
 import label_studio
+import bugsnag
 
 try:
     import ujson as json
@@ -55,11 +56,26 @@ from label_studio.project import Project
 from label_studio.tasks import Tasks
 from label_studio.utils.auth import requires_auth
 
+from bugsnag.flask import handle_exceptions
+from bugsnag.handlers import BugsnagHandler
+from werkzeug.exceptions import HTTPException
+
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
+
+# Configure Bugsnag
+bugsnag.configure(
+  release_stage = os.environ.get('BUGSNAG_RELEASE_STAGE', 'production'),
+  api_key = os.environ['BUGSNAG_API_KEY'],
+  project_root = "/label-studio",
+)
 
 
 def create_app():
-    """Create application factory, as explained here:
+    """
+    Create application factory, as explained here:
     http://flask.pocoo.org/docs/patterns/appfactories/.
 
         config_object="label_studio.settings"
@@ -74,6 +90,7 @@ def create_app():
 
 
 app = create_app()
+handle_exceptions(app)
 
 
 # input arguments
@@ -173,6 +190,13 @@ def validation_error_handler(error):
     logger.error(error)
     return str(error), 500
 
+@app.errorhandler(Exception)
+def handle_error(error):
+    logger.error(error)
+    code = 500
+    if isinstance(error, HTTPException):
+        code = error.code
+    return str(error), code
 
 @app.route('/')
 @requires_auth
@@ -804,12 +828,24 @@ def api_completion_update(task_id, completion_id):
     task_id = int(task_id)
     completion = request.json
 
+    original_result_size = len(completion['result'])
+
     completion.pop('state', None)  # remove editor state
     completion['skipped'] = completion['was_cancelled'] = False  # pop is a bad idea because of dict updating inside
-
+    completion['result'] = remove_invalid_results_from_completion(completion)
     completion['id'] = int(completion_id)
+    
+    validated_result_size = len(completion['result'])
+    if original_result_size != validated_result_size:
+        bugsnag.notify(f'Had to filter out invalid completions where label did not match photo on Task: {task_id}, Completion: {completion_id}. Original completion: {completion}')
     g.project.save_completion(task_id, completion)
+
     return make_response('ok', 201)
+
+
+def remove_invalid_results_from_completion(completion):
+    return list(filter(lambda result: result['from_name'].split('label')[1] == result['to_name'].split('photo')[1],
+                       completion['result']))
 
 
 @app.route('/api/projects/1/expert_instruction')

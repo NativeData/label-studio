@@ -18,10 +18,14 @@ from requests.adapters import HTTPAdapter
 from .io import get_data_dir
 from .exceptions import ValidationError
 from .functions import _LABEL_CONFIG_SCHEMA_DATA
+from bugsnag.handlers import BugsnagHandler
 
 DEFAULT_PROJECT_ID = 1
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 @attr.s
 class ProjectObj(object):

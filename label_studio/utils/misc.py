@@ -19,7 +19,12 @@ from dateutil.tz import tzlocal
 
 from .io import find_dir
 
+from bugsnag.handlers import BugsnagHandler
+
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 
 # settings from django analogue
