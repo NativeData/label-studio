@@ -9,6 +9,7 @@ import logging
 import logging.config
 import traceback as tb
 import label_studio
+import bugsnag
 
 try:
     import ujson as json
@@ -55,7 +56,19 @@ from label_studio.project import Project
 from label_studio.tasks import Tasks
 from label_studio.utils.auth import requires_auth
 
+from bugsnag.flask import handle_exceptions
+from bugsnag.handlers import BugsnagHandler
+
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.ERROR)
+logger.addHandler(handler)
+
+# Configure Bugsnag
+bugsnag.configure(
+  api_key = os.environ['BUGSNAG_API_KEY'],
+  project_root = "/label-studio",
+)
 
 
 def create_app():
@@ -74,6 +87,7 @@ def create_app():
 
 
 app = create_app()
+handle_exceptions(app)
 
 
 # input arguments

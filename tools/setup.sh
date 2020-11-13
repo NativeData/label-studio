@@ -49,6 +49,8 @@ for i in $(seq "$NUMBER_OF_SERVERS"); do
     echo "  labels$i:" >> $FILE
     echo '    build: .' >> $FILE
     echo "    container_name: labels$i" >> $FILE
+    echo '    environment:' >> $FILE
+    echo '      - BUGSNAG_API_KEY' >> $FILE
     echo "    command: 'label-studio start my_project $INIT_COMMAND --host 0.0.0.0'" >> $FILE
     echo '    volumes:' >> $FILE
     echo "      - ./projects/labels$i:/label-studio/my_project" >> $FILE
