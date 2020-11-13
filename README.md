@@ -134,8 +134,7 @@ INIT_COMMAND=--init --force
 * unhandled errors
 * log statements at `ERROR` level or above
 
-The `BUGSNAG_API_KEY` is read as an environment variable.
-
+The `BUGSNAG_API_KEY` is read as an environment variable. `BUGSNAG_RELEASE_STAGE` is used to specify which environment type is running. Local development should have this set to `development`.
 ### Bugsnag & Docker
 
 * Docker compose expects an `.env` file with an environment variable of `BUGSNAG_API_KEY` to be defined. This will be picked up automatically by a standard `docker-compose up` and set within the running containers.

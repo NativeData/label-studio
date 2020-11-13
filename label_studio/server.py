@@ -66,6 +66,7 @@ logger.addHandler(handler)
 
 # Configure Bugsnag
 bugsnag.configure(
+  release_stage = os.environ.get('BUGSNAG_RELEASE_STAGE', 'production'),
   api_key = os.environ['BUGSNAG_API_KEY'],
   project_root = "/label-studio",
 )
