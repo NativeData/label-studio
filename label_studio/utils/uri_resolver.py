@@ -11,9 +11,12 @@ from google.auth import compute_engine
 from datetime import datetime, timedelta
 
 from label_studio.storage.s3 import get_client_and_resource
-
+from bugsnag.handlers import BugsnagHandler
 
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 PRESIGNED_URL_TTL_MINUTES = 1
 

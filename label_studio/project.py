@@ -24,8 +24,12 @@ from label_studio.utils.functions import get_full_hostname
 from label_studio.tasks import Tasks
 from label_studio.storage import create_storage, get_available_storage_names
 
-logger = logging.getLogger(__name__)
+from bugsnag.handlers import BugsnagHandler
 
+logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 class ProjectNotFound(KeyError):
     pass

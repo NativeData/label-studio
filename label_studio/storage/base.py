@@ -16,8 +16,12 @@ from ordered_set import OrderedSet
 
 from label_studio.utils.io import json_load
 from label_studio.utils.validation import TaskValidator, ValidationError as TaskValidationError
+from bugsnag.handlers import BugsnagHandler
 
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 _storage = {}
 

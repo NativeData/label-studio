@@ -23,10 +23,14 @@ from collections import Counter
 from .exceptions import ValidationError
 from .misc import Settings
 from label_studio.utils.functions import get_full_hostname
+from bugsnag.handlers import BugsnagHandler
 
+logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 settings = Settings
-logger = logging.getLogger(__name__)
 csv.field_size_limit(131072 * 10)
 
 

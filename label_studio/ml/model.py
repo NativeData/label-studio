@@ -15,9 +15,12 @@ from rq.registry import StartedJobRegistry, FinishedJobRegistry, FailedJobRegist
 from rq.job import Job
 
 from label_studio.utils.misc import parse_config
-
+from bugsnag.handlers import BugsnagHandler
 
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 
 @attr.s

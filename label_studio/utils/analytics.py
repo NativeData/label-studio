@@ -16,11 +16,18 @@ from collections import defaultdict
 from uuid import uuid4
 from .misc import get_app_version, parse_config, convert_string_to_hash
 from .io import get_config_dir
+from bugsnag.handlers import BugsnagHandler
 
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
-mp = Mixpanel('269cd4e25e97cc15bdca5b401e429892')
-
+mixpanel_token = os.environ.get('MIXPANEL_TOKEN', None)
+if mixpanel_token != None:
+    mp = Mixpanel(mixpanel_token)
+else:
+    mp = None
 
 class Analytics(object):
 

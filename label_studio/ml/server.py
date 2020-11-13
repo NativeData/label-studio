@@ -5,9 +5,12 @@ import shutil
 
 from label_studio.utils.io import find_dir
 from label_studio.ml.utils import get_all_classes_inherited_LabelStudioMLBase
-
+from bugsnag.handlers import BugsnagHandler
 
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 
 def get_args():

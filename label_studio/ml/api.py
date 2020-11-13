@@ -5,8 +5,12 @@ from rq.exceptions import NoSuchJobError
 
 from label_studio.ml.model import LabelStudioMLManager
 from label_studio.utils.misc import exception_treatment
+from bugsnag.handlers import BugsnagHandler
 
 logger = logging.getLogger(__name__)
+handler = BugsnagHandler()
+handler.setLevel(logging.WARNING)
+logger.addHandler(handler)
 
 _server = Flask(__name__)
 _manager = LabelStudioMLManager()

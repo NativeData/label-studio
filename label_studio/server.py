@@ -58,10 +58,11 @@ from label_studio.utils.auth import requires_auth
 
 from bugsnag.flask import handle_exceptions
 from bugsnag.handlers import BugsnagHandler
+from werkzeug.exceptions import HTTPException
 
 logger = logging.getLogger(__name__)
 handler = BugsnagHandler()
-handler.setLevel(logging.ERROR)
+handler.setLevel(logging.WARNING)
 logger.addHandler(handler)
 
 # Configure Bugsnag
@@ -73,7 +74,8 @@ bugsnag.configure(
 
 
 def create_app():
-    """Create application factory, as explained here:
+    """
+    Create application factory, as explained here:
     http://flask.pocoo.org/docs/patterns/appfactories/.
 
         config_object="label_studio.settings"
@@ -188,6 +190,13 @@ def validation_error_handler(error):
     logger.error(error)
     return str(error), 500
 
+@app.errorhandler(Exception)
+def handle_error(error):
+    logger.error(error)
+    code = 500
+    if isinstance(error, HTTPException):
+        code = error.code
+    return str(error), code
 
 @app.route('/')
 @requires_auth
